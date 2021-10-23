@@ -1,0 +1,55 @@
+BBT.BI.201 Introduciton to high-throguhput data analysis (Fall 2021)
+
+EX1: Instruct an index for reference genome.fa file with bowtie2 command
+Command:
+bowtie2-build hg38_chr7.fa hg38_chr7_index
+
+bowtie2-build <file.fa> <file name_index>
+Out put name: hg38_chr7_index
+
+EX2:To check the statistical analysis in bowtie2 index file
+Command:
+bowtie2 -x hg38_chr7_index -1  FL7_r1.fastq.gz -2 FL7_r2.fastq.gz -S FL7.sam 2>bowtie2_stats.log
+
+The output file name: FL.sam 
+Command bowtie2 -x
+Referenece: index file (hg38_chr7_index)
+-1 : 1st file input
+-2 : 2nd file input
+-S : file output sam.file
+-B : file output bam.file
+2>bowie2_stats.log ???
+
+EX4: Chang the same file to bam file in the same time using bowtie2 command.
+Command
+bowtie2 -x hg38_chr7_index - 1 FL_r1.fastq.gz -2 FL_r2.fastq.gz 2>bowtie2_stats.log | -S FL2.sam | -O BAM -o FL7.bam
+
+Hint:
+bowtie2 --very-fast -x hg38_chr7_index -1 /PATH/TO/FL7_r1.fastq.gz -2/PATH/TO/FL7_r2.fastq.gz 2>bowtie2_stats.log | samtools view -O BAM -o /PATH/TO/FL7.bam
+
+To change the sam.file to bam.file, we must use samtools view with -O and -o command for operation
+samtools view -o <bam.file> -O BAM <sam.file>
+Command:
+samtools view -o FL7.bam -O BAM FL7.sam
+
+EX5: To check the size of file
+Command:
+ls -lh <file name>
+
+Now, that we have the BAM file, there is no need to keep the SAM file. Let's remove the SAM file using the following command 
+Command:
+
+
+rm-rv FL7.sam
+ bowtie2 --very-fast -x hg38_chr7_index -1 FL7_r1.fastq.gz -2 FL7_r2.fastq.gz 2> bowtie2_stats.log | samtools view -O BAM | samtools sort -o FL7_sorted.bam
+
+Checking the number of properly paired read pairs in BAM file by counting unique read identifiers:
+samtools view -f 2 file.bam | cut -f1 | sort -u | wc -l
+
+EX6: reading the file in zip file without uncompressing zip file
+Command 
+zcat <file zip name> | head -n1
+
+Week4:
+find command
+find ./GFG -name sample.txt 
