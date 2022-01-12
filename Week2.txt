@@ -1,0 +1,72 @@
+Week2: Unix environment
+
+1. Original UNIX was a commercial operating systems, whic is special program that supervises all programm
+running on a computer.
+- prevent programs from accessing each other 's memory
+- prevent programs from accesssing files that belong to other users
+- guard access to hard drives, keybroads, mice, printers, displays, and network interfaces.
+- kill programs that endager stability by using too much memory
+- provides an abstraction layer that hides the complecity of the underlying hardware.
+
+# drag each unix command to the corresponding definition
+cut : output columns from a tabular text file
+echo : writen given arguments as text to standard output stream
+wc : count words and lines
+cat: concaternates files
+top: shows the total workload and processess running on the server
+chgrp: changes group of files and folders
+grep: is used to search for text from give file.
+
+# Floating point numbers are used to reprensent numbers with decimal part.
+In floating point representation, exponent makes it possible to represent very large and very small numbers.
+Single precision floating point numbers are represented with 32 bits.
+Double precision floating point numbers are represented with 64 bits.
+
+# In computer memery, text is stored as a contiguous sequence of character.
+ASCII encodes 128 specified character into seven bit integers.
+Unicode standard defines a universal character set with huge amount of character symbols, most commonly 
+encoded with UTF-8 encoding.
+
+2. Make the screen.
+To see the importance of knowing how to use such a tool, imagine a case where you are not using screen, and 
+your program/script has been running for several hourse. For some reason, you lose your connection to the 
+remote server. This terminates the sessions and consequently, the program/script that was running. In such 
+case, there is a good chance that you need to run to programm from scratch, which means that you have lost 
+hours of your time.
+
+# access rights in UNIX
+connect to BINF server and run ls -l/home/|grep <your_username> in your terminal. This sequence of commands 
+first lists the contents of /home/directory and then selects only line containing <your_names> with grep command.
+
+3. Using FastQC and trimmomatic tools for high-throughput sequence quality control. 
+fastqc <file name> <folder name>
+In here, I have two samples sample_r1.fastqc and sample_2.fastqc
+Command:
+fastqc sample_r1.fastqc <directory storing the output>
+fastqc sample_r2.fastqc <directory storing the output>
+The output includes two files: HTML and ZIP file. HIML file can be open in the web brower on the local machine.
+It shows the quality of sample and statistical analysis of sample. 
+
+4. MultiQC tool 
+FastQC tool create one HTML file per each FASTQ file. WHat if you had tens or more samples of FASTQ files (
+or other file such as SAM and BAM), a case that happens often in bioinformatics project, and you wanted to perform
+the QC on those samples? In that case, it would be rather difficult and time consuming to inspect the QC results one 
+file at a time. Thanks to a toold callsed MultiQC, one can aggrefate results from bioinformatics analyses across many 
+samples into one single report.
+Command:
+multiQC <file names> <directory>
+
+5. Trimmomatic tool
+I inspected the quality of two FASTQ files using FastQC. There, everything looked quite OK. But this is not always 
+the case. For instance, in Illumina sequencing technology, when performing sequencing experiments, the more cycles do,
+the more base call quality scores drop (drop in the quality scores means that there is a higher chance that the 
+sequencer machine might have made a mistake in calling A, C, G, and T based. 
+
+For example, if you look at the MultiQC results under Sequence Quality Histograms, you can see a slight drop in the 
+quality scores after position 94. In this specific example, the quality scores after position 94 are in the yellow 
+zone (i.e. the Phred quality score falls below 28) which would, in most cases, still be good enough not to necessitate 
+any further action. However, in case they were in the red zone, one solution would be to remove/trim part of the reads 
+with low quality scores. In this exercise, we use a tool called trimmomatic to achieve this.
+
+Command: to cut off the sequence after location 94
+trimmomatic PE ../../sample_r1.fastq ../../sample_r2.fastq -baseout ./Trim_Reads CROP:94
