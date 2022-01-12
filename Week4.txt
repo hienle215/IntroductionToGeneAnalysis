@@ -1,0 +1,77 @@
+Week4: RNA-seq: alignment and read counting
+
+This is focused on finding variants (i.e. to find single points in the genome that are different from the reference genome) from
+data obtained from a DNA-seq, whole-exome sequencing experiments performed on a B-cell follicular lymphoma samples. In addition, 
+we learn to annotate the deletected variants with some additional that could e.g. help researchers to decided whether a give 
+variants is of importance with regard to the condition under study.
+
+1. RNA sequencing
+- RNA-seq can quantify the expression of any transcribe part of the genome and discover what those transcribe parts are.
+- The longer the reads are and availability of paired end data enables transcripts structure analysis (which exons go together)
+- By increasing the sequencing depth, the accuracy of quantification and/or transcript structures canbe improved.
+- We can get indirect evidence of DNA changes as well.
+
+Purpose of RNA-seq reads
+- RNA-seq can be used to find transcript structure and not just quantify known transcript expression. On the left, we do gapped 
+alignment agianst the reference. One the right, de novo assembly is used and the resutls are compared against a reference genome.
+- Alignment against a transcriptome can be used to make things quicker- the transcriptome is much smaller than the genome. Standard
+alignment against the reference genome finds more alignments. 
+
+What are the differences between DNA and RNA sequencing?
+Massive parallel DNA sequencing includs Whole Genome Sequencing (WGS), Whole Exome Sequencing (WVS) and targeted sequencing.
+WGS implied sequencing of the entire DNA genome, while WES focuses on sequencing only mRNA coding regions (exons) which usually
+represent a very minor genome fraction (3% in humans). While both WGS and WES are used to discover rare mutations and /or common 
+variants associated with a disorder or phenotype. WES is significantly less expensive and faster than WGS. Targeted sequencing focuses
+on only a subset of genes (or DNA regions) of interst and is the fastest and cheapest DNA-seq type.
+
+EX: create a sequence of command that first, using samtools, sorts the FL7_sorted.bam file from the previous week by read name and outputs
+the results in SAM format to the standard output, next marks the duplicate reads using samblaster with default parameters values, and 
+finally, using samtools, sorts the reads one more by genomic position and write the resutls into BAM file namesd FL7_duplicated.bam
+Command:
+samtools sort FL7_sorted.bam -O SAM -n | samblaster | samtools sort -O BAM -o ../week4/FL7_dupmarked.bam
+
+Using samtools view with command-line options -c and -f to count the number of marked duplicated read (To find the proper parameter
+value for the -f command-line option, we should check the samtools flags command)
+
+2. Samtools mpileup
+To call the variants on a DNA-seq data, we are going to use varscan2 tool. However, varscan2 requires a PILEUP file to work, we are
+going to use samtool mpileup to create a PILEUP file for FL7_dupmarked.bam file that we created in assignment 1.
+Command:
+samtools mpileup -q 10 - f ../../../../../ student_data/references/hg38_chr7.fa FL7_dupmarked.bam > FL7.pileup
+
+Note: -q 10 alignment that have mapQ below 10.
+
+3. VarScan2 command
+Varscan2 command provides separate commands for calling SNP2 and insertation/deletions (indels).
+Run varscan with the default parameters to call the SNPs. However, require that the output should be in VCF format (varscan mpileup2snp -h).
+Note that varscan can not work with compressed file (gzipped file). Therefore, we use our knowledge to decompress the file on the fly while
+keeping the original zipped file unchanged and pipe it to the varscan.
+Command:
+zcat FL7.pileup.gz | varscan mpileup2snp --output -vcf 1 > variants/snps.vcf
+
+4. vcfanno command
+Now, we have a list of variants and also we know a bit more about why they were reported as variants. However, as you have noticed, a few 
+thousand variants were detected only from chromosome 7. Majority of the variants we get are likely to be not important from the point of 
+view of the condition we are interested in studying. We need a way to prioritize the variants based on their importance e.g. in terms of 
+their deleteriousness. This way, we can possibly save time in finding the variants that are important with regard to a given condition. 
+One step that we can take to achieve this is to annotate the variants and use that information to decide about the importance of a variant. 
+For example, we can annotate the variants with their corresponding population frequency. If a variant is common in a population, we can 
+discard that variant. In this exercise, we annotate the detected variants with some additional information[1]. We will use vcfanno to perform
+ the annotation
+Command:
+vcfanno /student_data/BBT.BI.201_2021/data/week_4/conf.toml snps.vcf > snps_annotated.vcf
+
+
+
+samtools sort -n FL7_sorted.bam -o FL7_sorted_n.sam && 
+samblaster -a -i FL7_sorted_n.sam -o FL7_sorted_n_blaster.sam && 
+samtools sort FL7_sorted_n_blaster.sam -o ../week_4/FL7_dupmarked.bam
+
+
+
+Right command:
+samtools sort -n FL7_sorted.bam -O SAM -n | samblaster | samtools sort -O BAM -o /student_data/BBT_2021/students/leh/week_4/FL7_dupmarked.bam
+
+Varscan command
+1 st: zcat FL7.pileup.gz | varscan mpileup2snp --vcf - > mkdir variants (wrong)ls 
+zcat FL7.pileup.gz | varscan mpileup2snp 1 - > variants/snps.vcf
