@@ -1,0 +1,100 @@
+Week5: RNA-seq experiments
+
+We have data from two cell lines: one cell line representing normal human prostate EP156T and VCap cell line reprensenting a type of human prostate cancer.
+For efficiency reason, we only work with sequencing reads mapping to the chrX. The sequencing read data is available in FASTQ format under:
+ /student_data/BBT.BI.201_YEAR/data/week_5/{VCaP, EP145T}_chrX_r{1,2}.fq
+
+1. Hisat2-build
+To create a genomic region index, construct an index for /student_data/references/g38_chrX.fa. 
+Command:
+hisat2-build ../../../../student_data/references/hg38_chrX.fa hg38_chrX_index
+
+2. Hisat2 command
+Align the sequencing reads from chrX of the two cell lines (i.e. {VCaP,EP156T}_chrX_r{1,2}.fq) to the reference genome using default parameters of HISAT2. 
+At the same time, using pipes, sort the aligned reads by genomic position and save them in BAM format. Remember to redirect the HISAT2's standard error to 
+a log file. 
+Command:
+hisat2 -q -x hg38_chrX_index -1 ../../../data/week_5/VCaP_chrX_r1.fq -2 ../../../data/week_5/VCaP_chrX_r2.fq -S VCaP_chrX.sam
+samtools sort VCaP_chrX.sam -o VCaP_chrX_sorted.bam
+samtools index -b VCaP_chrX_sorted.bam VCaP_chrX.bai
+
+hisat2 -q -x hg38_chrX_index -1 ../../../data/week_5/EP156T_chrX_r1.fq -2 ../../../data/week_5/EP156T_chrX_r2.fq -S EP156T_chrX.sam
+samtools sort EP156T_chrX.sam -o EP156T_chrX_sorted.bam
+samtools index -b EP156T_chrX_sorted.bam EP156T_chrX.bai
+
+If we want to open bam file in IGV, we must have BAI file also. BAI file includes the information of index. 
+
+3. Bedtools 
+In this exercise, we will count the number of aligned reads overlapping a given region (e.g. a gene) in the genome. To do so, we will learn how to use a 
+tool called Bedtools. Bedtools is a suite of different utilities that are used for a wide range of genomics analysis tasks. The Bedtools utility that we 
+are going to use in this exercise is called bedtools multicov. 
+
+Read the document for this utility here. Note that this utility requires at least two input files: BAM file(s) which is determined by -bams command-line 
+option and another file which is determined by -bed command-line option which can be of different file formats (i.e. BED, GFF, or VCF). 
+
+Here, we are going to use a BED file that can be found here: /student_data/references/annotations/gencode_v31_chrX.bed
+Run the bedtools multicov on both BAM files at the same time. Set the proper command-line option such that aligned reads with Mapping quality below 10 will 
+be excluded from counting. Redirect the results in a file name count_matrix.tsv[1] in your week_5 directory.
+
+Command:
+bedtools multicov -q 10 -bams VCaP_chrX_sorted.bam EP156T_chrX_sorted.bam -bed /student_data/references/annotations/gencode_v31_chrX.bed > count_matrix.tsv
+
+4. bedtools multicov (exercise 4)
+In here, we will mark the duplicate reads in the BAM files we created as VCaP_sorted.bam and EP156T_sorted.bam using bedtools multicov to see the different
+between marked and unmarked duplication.
+
+Command:
+samtools sort VCaP_chrX_sorted.bam -O SAM -n | samblaster | samtools sort -O BAM -o VCaP_chrX_duplicated.bam > VCaP_chrX_duplicated.log
+samtools sort EP156T_chrX_sorted.bam -O SAM -n | samblaster | samtools sort -O BAM -o EP156T_chrX_duplicated.bam > EP156T_chrX_duplicated.log
+
+samtools index VCaP_chrX_duplicated.bam VCaP_chrX_duplicated.bai  
+samtools index EP156T_chrX_duplicated.bam  EP156T_chrX_duplicated.bai  
+
+
+bedtools multicov -q 10 -bams VCaP_chrX_duplicated.bam EP156T_chrX_duplicated.bam -bed /student_data/references/annotations/gencode_v31_chrX.bed > count_matrix_duplicated.tsv
+
+
+
+Also, create a samtools index for each of the BAM files. 
+
+Know the names of all the 
+
+gunzip -c /student_data/references/annotations/gencode.v31.annotation.gtf.gz | grep -v -e "^#" | cut -f2 | sort -c
+
+-u: unique processing to suppress all but one in each set of lines having equal keys
+
+-f: fold lower case to upper case characters
+
+-c: check that input file is sorted
+-n: fold lower case to upper case character
+
+gunzip -c gencode.v31.annotation.gtf.gz | grep -v -e "^#" | cut -f2 | sort -c
+ENSEMBL
+
+gunzip -c gencode.v31.annotation.gtf.gz | grep -v -e "^#" | cut -f3 | sort -c
+EXON
+
+
+gunzip -c gencode.v31.annotation.gtf.gz | grep -v -e "^#" | cut -f5 | sort -c
+
+
+gunzip -c gencode.v31.annotation.gtf.gz | grep -v -e "^#" | cut -f6 | sort -c
+
+gunzip -c gencode.v31.annotation.gtf.gz | grep -v -e "^#" | cut -f6 | sort -c
+
+
+samtools view -o VCaP_chrX_1.bam -O BAM VCaP_chrX.sam
+samtools sort VCaP_chrX_1.bam -O BAM -o VCaP_chrX_1_sorted.bam
+samtools index VCaP_chrX_1_sorted.bam VCaP_chrX_1_sorted.bam.bai
+
+samtools view -o EP156T_chrX_1.bam -O BAM EP156T_chrX.sam
+samtools sort EP156T_chrX_1.bam -O BAM -o EP156T_chrX_1_sorted.bam
+samtools index EP156T_chrX_1_sorted.bam EP156T_chrX_1_sorted.bam.bai
+
+hisat2 command:
+hisat2 -f -x hg19_indexed -1 reads_R1.fq -2 reads_R2.fq | samtools view -bSh > eg2.bam
+hisat2 -q -x hg38_chrX_index -1 ../../../data/week_5/VCaP_chrX_r1.fq -2 ../../../data/week_5/VCaP_chrX_r2.fq | samtools view -bS > VCaP_chrX.sam
+samtools sort VCaP_chrX.sam > VCaP_chrX_sorted.bam
+samtools index VCaP_chrX_sorted.bam
+
+hisat2 -q -x hg38_chrX_index -1 ../../../data/week_5/EP156T_chrX_r1.fq -2 ../../../data/week_5/EP156T_chrX_r2.fq -S | samtools view -bS > EP156T_chrX.sam
