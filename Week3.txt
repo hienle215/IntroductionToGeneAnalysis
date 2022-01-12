@@ -1,0 +1,58 @@
+Week3: bowtie2 command, samtools view
+
+1. bowtie2 command is used to create the index file that is made from a reference genome. To create an index file for a give reference genome
+Command:
+bowtie2-build hg38_chr7.fa hg38_chr7_index
+
+Assume that we have paired-end reads, what are the meaning of -x, -1, -2, and -S command line options in the bowtie2 command:
+	-x specifies the bowtie2 index file
+	-1 specifies the files that contains the #1 mates, paired with file in <m2>
+	-2 specifies the file that contains the #2 mates, paired with file in <m1>
+	-S specifies the name of the output SAM file for writing the results into. Otherwies, be default, the results are written in stdout
+	-q command-line option to tell the input data are in FASTQ format
+	-f command-line options to tell the input data are in FASTA format
+The parameter values for sensitive present are -D 15 -R 2 -N 0 -L 22 -i S,1,1.5
+It means: -R for reads with repetitive seeds, try 2 sets of seeds- -D give up extending after 15 failed extend in a row. -N maximum number of 
+mismatches in seed alignments is 0. -L length of seed sub-string is 22. 
+The command will be fast present give up extending failed extend earlier than sensitive preset.
+Command:
+bowtie2 -x hg38_chr7_index -1 FL7_r1.fastq.gz FL2_r2.fastq.gz -S FL7.sam 2>bowtie2_stats.log
+
+Role of log file: if the command ends immediately afer execution and you are redirecting the stderr to a log file, inspect the log file and look 
+possible errors.
+
+If we want to change and save the result directly in BAM file, we can do sequece of commands:
+bowtie2 --verr-fast -x hg38_chr7_index -1 /PATH/TO/FL_1.fastq.gz -2/PATH/TO/FL7_r2.fastq.gz 2>bowtie2_stats.log | samtools view -O BAM -o/PATH/TO/FL7.bam
+
+Key paprameters affecting alignment performance include:
+	- seed length
+	- interval between consecutive seeds
+	- number of mismatches allowed per seed
+	- how many consecutive seed extensions can fail before stopping
+	- how many times is a read re-seeded (by changing offset) in case there are too many seed hits
+Bowtie2 is not suitable when we want to aling data that has longer gaps in the alignments such as RNA-seq data. 
+
+2. Samtools view command
+Convert the FL7.sam file to BAM file with the name FL7.bam. This command is used to align the data in bam file
+Command:
+samtoos view -o FL7.bam -O BAM FL7.sam
+
+3. Samtools sort command
+After alignment, the order of the aligned reads in the BAM file follows the order of the reads in the FASTQ file. Some bioinformatics tools require that 
+BAM files to be sorted to be able to do their job. Thus, here, we will sort the BAM file by genomic position such as chromosomal coordinate using samtools
+sort command.
+Command:
+samtools sort FL7.bam -o FL7_sorted. bam
+
+Note that, again,we ended up with two BAM files containing the same information where only different between them is that one is sorted and the other not.
+It is possible to create a sequence of commands, that does the alignment, BAM conversion and sorting and by that fix the issue of having intermediary SAM/BAM files.
+Command:
+bowtie2 --very-fast -x hg38_chr7_index -1 /PATH/TO/FL7_r1.fastq.gz -2/PATH/TO/FL7_r2.fastq.gz 2>bowtie2_stats.log |samtools view -O BAM | samtools sort -o FL7_sorted.bam
+
+4. The output of the samtools stats is quite detailed. Run the following command to visualuz the results:
+Command:
+plot-bamstats-p FL7_stats_viz /log_file.log
+
+Replace the log_file.log with the log file you created for the samtools stats command. This command creats a new directly containing an index-html file. Open the index.html file 
+in your web browser and inspect the results. One of the figures reports the GC content. What is the GC content percentage at the peak of the curve?
+
