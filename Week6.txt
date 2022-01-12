@@ -1,0 +1,111 @@
+Coding for week 6
+
+
+> barplot(significant_pathways$Count, xlab = "Significant pathways", ylab= "Count")
+> barplot(significant_pathways$Count, xlab = "Significant pathways", ylab= "Count", ylim = c(1,100))
+> barplot(significant_pathways$Count, xlab = "Significant pathways", ylab= "Count", ylim = c(1,100), col="blue")
+> barplot(significant_pathways$Count, xlab = "Significant pathways", ylab= "Count", ylim = c(1,100), col="blue", cex.names = significant_pathways$Term)
+> barplot(significant_pathways$Count, xlab = "Significant pathways", ylab= "Count", ylim = c(1,100), col="blue", cex.names = significant_pathways$Term, density =10)
+> barplot(significant_pathways$Count, xlab = "Significant pathways", ylab= "Count", ylim = c(1,100), col="blue", cex.names = significant_pathways$Term)
+> x_name <- significant_pathways$Term
+> x_value <- significant_pathways$Count
+> data <- rbind(x_name, x_value)
+> barplot(data, xlab = "Significant pathways", ylab= "Count", ylim = c(1,100), col="blue", cex.names = significant_pathways$Term)
+> summary(data)
+
+> par(mar=c(5.1, 4.1, 4.1, 2.1), las=0)
+> barplot(significant_pathways$Count, xlab = "Significant pathways", ylab= "Count", ylim = c(1,100), col="blue", cex.names = significant_pathways$Term)
+> barplot(significant_pathways$Count, xlab = "Significant pathways", ylab= "Count", ylim = c(1,100), col="blue", names.arg= significant_pathways$Term, cex.names=0.4)
+> barplot(significant_pathways$Count, xlab = "Significant pathways", ylab= "Count", ylim = c(1,100), col="blue", x, names.arg= significant_pathways$Term, cex.names=0.4)
+Error in mean(width) : object 'x' not found
+> barplot(significant_pathways$Count, xlab = "Significant pathways", ylab= "Count", ylim = c(1,100), col="blue", names.arg= significant_pathways$Term, cex.names=0.4)
+> ?barplot
+> barplot(significant_pathways$Count, xlab = "Significant pathways", ylab= "Count", ylim = c(1,100), col="blue", names.arg= significant_pathways$Term, cex.names=0.4, las =2)
+> par(mar=c(5.1, 4.1, 4.1, 2.1), las=2)
+> barplot(significant_pathways$Count, xlab = "Significant pathways", ylab= "Count", ylim = c(1,100), col="blue", names.arg= significant_pathways$Term, cex.names=0.4)
+> barplot(significant_pathways$Count, xlab = "Significant pathways", ylab= "Count", ylim = c(1,100), col="blue", names.arg= significant_pathways$Term, cex.names=0.4)
+> par(mar=c(10, 4.1, 4.1, 2.1), las=2)
+> barplot(significant_pathways$Count, xlab = "Significant pathways", ylab= "Count", ylim = c(1,100), col="blue", names.arg= significant_pathways$Term, cex.names=0.4)
+Error in plot.new() : figure margins too large
+> par(mar=c(1.1, 4.1, 4.1, 2.1), las=2)
+> barplot(significant_pathways$Count, xlab = "Significant pathways", ylab= "Count", ylim = c(1,100), col="blue", names.arg= significant_pathways$Term, cex.names=0.4)
+> par(mar=c(10.1, 4.1, 4.1, 2.1), las=2)
+> barplot(significant_pathways$Count, xlab = "Significant pathways", ylab= "Count", ylim = c(1,100), col="blue", names.arg= significant_pathways$Term, cex.names=0.4)
+Error in plot.new() : figure margins too large
+> par(mar=c(11,4,4,4), las=2)
+> barplot(significant_pathways$Count, xlab = "Significant pathways", ylab= "Count", ylim = c(1,100), col="blue", names.arg= significant_pathways$Term, cex.names=0.4)
+Error in plot.new() : figure margins too large
+> par(mar=c(8.1, 4.1, 4.1, 2.1), las=2)
+> barplot(significant_pathways$Count, xlab = "Significant pathways", ylab= "Count", ylim = c(1,100), col="blue", names.arg= significant_pathways$Term, cex.names=0.4)
+Error in plot.new() : figure margins too large
+> par(mar=c(6.1, 4.1, 4.1, 2.1), las=2)
+> barplot(significant_pathways$Count, xlab = "Significant pathways", ylab= "Count", ylim = c(1,100), col="blue", names.arg= significant_pathways$Term, cex.names=0.4)
+> par(mar=c(3.1, 4.1, 4.1, 2.1), las=2)
+> barplot(significant_pathways$Count, xlab = "Significant pathways", ylab= "Count", ylim = c(1,100), col="blue", names.arg= significant_pathways$Term, cex.names=0.4)
+> par(mar, las=2)
+Error in par(mar, las = 2) : object 'mar' not found
+> par("mar", las=2)
+> barplot(significant_pathways$Count, xlab = "Significant pathways", ylab= "Count", ylim = c(1,100), col="blue", names.arg= significant_pathways$Term, cex.names=0.4)
+> barplot(significant_pathways$Count, xlab = "Significant pathways", ylab= "Count", ylim = c(1,100), col="blue", names.arg= significant_pathways$Term, cex.names=0.4)
+> par(mar=c(5.1, 4.1, 4.1, 2.1), las=2)
+> barplot(significant_pathways$Count, xlab = "Significant pathways", ylab= "Count", ylim = c(1,100), col="blue", names.arg= significant_pathways$Term, cex.names=0.4)
+> barplot(significant_pathways$Count, xlab = "Significant pathways", ylab= "Count", ylim = c(1,100), col="blue", names.arg= significant_pathways$Term, cex.names=0.4)
+> 
+> par(mfrow=c(1,2))
+> barplot(significant_pathways$Count, xlab = "Significant pathways", ylab= "Count", ylim = c(1,100), col="blue", names.arg= significant_pathways$Term, cex.names=0.4)
+> par(mar=c(5.1, 4.1, 4.1, 2.1), las=2)
+> barplot(significant_pathways$Count, xlab = "Significant pathways", ylab= "Count", ylim = c(1,100), col="blue", names.arg= significant_pathways$Term, cex.names=0.4)
+> par(mai=c(1.02,0.82,0.82,0.42))
+> barplot(significant_pathways$Count, xlab = "Significant pathways", ylab= "Count", ylim = c(1,100), col="blue", names.arg= significant_pathways$Term, cex.names=0.4)
+> par(“mai”)/par(“mar”)
+Error: unexpected input in "par(�"
+> par("mai")/par("mar)
++ barplot(significant_pathways$Count, xlab = "Significant pathways", ylab= "Count", ylim = c(1,100), col="blue", names.arg= significant_pathways$Term, cex.names=0.4)
+Error: unexpected symbol in:
+"par("mai")/par("mar)
+barplot(significant_pathways$Count, xlab = "Significant"
+> par("mai")/par("mar")
+[1] 0.2 0.2 0.2 0.2
+> barplot(significant_pathways$Count, xlab = "Significant pathways", ylab= "Count", ylim = c(1,100), col="blue", names.arg= significant_pathways$Term, cex.names=0.4)
+> par(mar=c(35,35,0,0))
+> barplot(significant_pathways$Count, xlab = "Significant pathways", ylab= "Count", ylim = c(1,100), col="blue", names.arg= significant_pathways$Term, cex.names=0.4)
+Error in plot.new() : figure margins too large
+> par(mar=c(5.1, 4.1, 4.1, 2.1), las=2)
+> barplot(significant_pathways$Count, xlab = "Significant pathways", ylab= "Count", ylim = c(1,100), col="blue", names.arg= significant_pathways$Term, cex.names=0.4)
+> barplot(significant_pathways$Count, xlab = "Significant pathways", ylab= "Count", ylim = c(0,100), col="blue", names.arg= significant_pathways$Term, cex.names=0.4)
+> significant_pathways
+
+score <-  -log10(res$pvalue)
+> plot(res$log2FoldChange, score, col =cols, panel.first=grid(), main ="Volcanol plot", xlab="log2(fold-change", ylab="pvalue", pch=20, cex=0.6, xlim=c(-5,5), ylim=c(0,20))
+Error in plot.xy(xy, type, ...) : object 'cols' not found
+> plot(res$log2FoldChange, score)
+> plot(res$log2FoldChange, score, col=cols)
+Error in plot.xy(xy, type, ...) : object 'cols' not found
+> plot(res$log2FoldChange, score)
+> plot(res$log2FoldChange, score, xlim=c(-5,5), ylim=c(0,20))
+> plot(res$log2FoldChange, score, xlim=c(-5,5), ylim=c(0,20), xlab="Log2-Fold-Change", ylab="Score")
+> plot(res$log2FoldChange, score, xlim=c(-5,5), ylim=c(0,20), xlab="Log2-Fold-Change", ylab="Score", main="Volcanol plot")
+> graphic.off()
+Error in graphic.off() : could not find function "graphic.off"
+> graphics.off()
+> plot(res$log2FoldChange, score, xlim=c(-5,5), ylim=c(0,20), xlab="Log2-Fold-Change", ylab="Score", main="Volcanol plot")
+> plot(res$log2FoldChange, score, xlim=c(-5,5), ylim=c(0,20), xlab="Log2-Fold-Change", ylab="Score", main="Volcanol plot", col =c("blue", "yellow"))
+> plot(res$log2FoldChange, score, xlim=c(-5,5), ylim=c(0,20), xlab="Log2-Fold-Change", ylab="Score", main="Volcanol plot", col =c("green", "yellow"))
+> plot(res$log2FoldChange, score, xlim=c(-5,5), ylim=c(0,20), xlab="Log2-Fold-Change", ylab="Score", main="Volcanol plot", col =c("green", "red"))
+> set.seed(777)
+> random_values = sample(1:1000, 11)
+> random_values
+ [1]  24 513  90 700 510 702  83  12 778 972 921
+> order(random_values)
+ [1]  8  1  7  3  5  2  4  6  9 11 10
+> random_values_ordered = random_values[order(random_values)]
+> random_values_ordered
+ [1]  12  24  83  90 510 513 700 702 778 921 972
+> random_values_ordered <= 700 
+ [1]  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE FALSE FALSE FALSE FALSE
+> sum(random_values_ordered <= 700) 
+[1] 7
+> set.seed(777)
+> random_values_1e6 = sample(1:1e4, 1e6, replace=TRUE)
+> sum(random_values_1e6 == 2500)
+[1] 80
